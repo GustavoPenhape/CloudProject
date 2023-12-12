@@ -86,8 +86,8 @@ def menu_cliente():
         print("******      Opciones      ******")
         print("1) Crear Slice")
         print("2) Listar Slice")
-        print("3) Monitoreo de recursos")
-        print("4) Cerrar sesión")
+        print("3) Cerrar sesión")
+        # print("4) Cerrar sesión")
 
         opcion = input("Seleccione una opción: ")
 
@@ -195,9 +195,9 @@ def menu_cliente():
         elif opcion == "2":
             print("Opción 2: Listar Slice")
             # Agrega aquí la lógica para listar slices si es necesario
-        elif opcion == '3':
-            obtenerRecursos()
-        elif opcion == "4":
+        # elif opcion == '3':
+        #     obtenerRecursos()
+        elif opcion == "1":
             confirmacion = input("¿Desea cerrar sesión? (a) Sí / (b) No: ")
             if confirmacion.lower() == "a":
                 return
@@ -282,7 +282,8 @@ def menu_admin():
         print("******     Opciones     ******")
         print("1) Ver lista de Slice solicitados por el cliente")
         print("2) Crear clientes")
-        print("3) Cerrar sesión")
+        print("3) Monitoreo de recursos")
+        print("4) Cerrar sesión")
 
         opcion = input("Seleccione una opción: ")
 
@@ -290,7 +291,9 @@ def menu_admin():
             print("Opción 1: Ver lista de Slice solicitados por el cliente")
         elif opcion == "2":
             print("Opción 2: Crear clientes")
-        elif opcion == "3":
+        elif opcion == '3':
+            obtenerRecursos()
+        elif opcion == "4":
             confirmacion = input("¿Desea cerrar sesión? (a) Sí / (b) No: ")
             if confirmacion.lower() == "a":
                 return
