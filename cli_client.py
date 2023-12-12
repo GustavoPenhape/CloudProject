@@ -4,6 +4,10 @@ import requests
 import curses
 from support_functions_ostack import get_token_for_admin, get_token_for_admin_in_project, get_flavors, get_images,build_network, build_subnet, build_port,get_console_url_per_instance,create_topology, autenticar_usuario
 
+import pandas as pd
+from tabulate import tabulate
+
+
 LOGO = """
 ░█████╗░██╗░░░░░░█████╗░██╗░░░██╗██████╗░                 ██╗███╗░░██╗████████╗███████╗██████╗░███████╗░█████╗░░█████╗░███████╗
 ██╔══██╗██║░░░░░██╔══██╗██║░░░██║██╔══██╗                 ██║████╗░██║╚══██╔══╝██╔════╝██╔══██╗██╔════╝██╔══██╗██╔══██╗██╔════╝ 
@@ -82,7 +86,8 @@ def menu_cliente():
         print("******      Opciones      ******")
         print("1) Crear Slice")
         print("2) Listar Slice")
-        print("3) Cerrar sesión")
+        print("3) Monitoreo de recursos")
+        print("4) Cerrar sesión")
 
         opcion = input("Seleccione una opción: ")
 
@@ -190,12 +195,44 @@ def menu_cliente():
         elif opcion == "2":
             print("Opción 2: Listar Slice")
             # Agrega aquí la lógica para listar slices si es necesario
-        elif opcion == "3":
+        elif opcion == '3':
+            obtenerRecursos()
+        elif opcion == "4":
             confirmacion = input("¿Desea cerrar sesión? (a) Sí / (b) No: ")
             if confirmacion.lower() == "a":
                 return
         else:
             print("Opción no válida. Por favor, seleccione una opción válida.")
+
+def obtenerRecursos():
+    url = 'http://10.20.10.10:8600/recursos'
+    try:
+        response = requests.get(url)
+        if response.status_code==200:
+            datos_api = response.json()
+            
+            # Extraer datos
+            mejor_vm = datos_api['mejorVM']
+            media_memoria = datos_api['recursos']['memoria']['media']
+            media_storage = datos_api['recursos']['storage']['media']
+            media_cpu = datos_api['recursos']['cpu']['core']['media']
+
+            # Crear un DataFrame
+            df = pd.DataFrame({
+                'Mejor VM': [mejor_vm],
+                'Media Memoria (GB)': [media_memoria],
+                'Media Storage (GB)': [media_storage],
+                'Media CPU (%)': [media_cpu]
+            })
+
+            tabla = tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False)
+
+            print(tabla)
+
+
+            # print(response.json())
+    except Exception as er:
+        print(f'mensaje de error : {er}')
 
 
 def display_final_options():
