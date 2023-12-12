@@ -2,7 +2,7 @@ import os
 import getpass
 import requests
 import curses
-from support_functions_ostack import get_token_for_admin, get_token_for_admin_in_project, get_flavors, get_images,build_network, build_subnet, build_port,get_console_url_per_instance,create_topology, autenticar_usuario
+from support_functions_ostack import get_token_for_admin, get_token_for_admin_in_project, get_flavors, get_images,build_network, build_subnet, build_port,get_console_url_per_instance,create_topology, autenticar_usuario,get_topologies
 
 import pandas as pd
 from tabulate import tabulate
@@ -24,7 +24,7 @@ usuarios = {
     "alexia": {"id": "46d691402a94430dac111990116f95a1", "rol": "cliente"},
     "oskar": {"id": "052d82b6f2874eefa8e63b99410feb48", "rol": "cliente"}
 }
-
+userid_global = ''
 # Función para el inicio de sesión
 def login():
     while True:
@@ -33,6 +33,10 @@ def login():
         isauth, user_TOKEN = autenticar_usuario(usuario, password)
         
         if isauth:
+            print('id user')
+            global userid_global
+            userid_global = usuarios[usuario]['id']
+            # print(userid_global)
             return usuarios[usuario]['rol'], usuarios[usuario]['id']
         else:
             print("Credenciales incorrectas")
@@ -162,6 +166,8 @@ def menu_cliente():
 
                 flavor_vm = flavor_ids_list[indice_flavor_seleccionado - 1]
 
+                
+
                 # Almacenar la información de la VM en la lista
                 vm_info = {
                     "Nombre": nombre_vm,
@@ -194,7 +200,14 @@ def menu_cliente():
             
         elif opcion == "2":
             print("Opción 2: Listar Slice")
+            list_slice = get_topologies(userid_global)
+
+            headers = ['ID', 'Name', 'Description']
+            table = tabulate(list_slice, headers, tablefmt='grid')
+            print(table)
+
             # Agrega aquí la lógica para listar slices si es necesario
+            
         # elif opcion == '3':
         #     obtenerRecursos()
         elif opcion == "1":
@@ -284,6 +297,7 @@ def menu_admin():
         print("2) Crear clientes")
         print("3) Monitoreo de recursos")
         print("4) Cerrar sesión")
+        print("5) list slce")
 
         opcion = input("Seleccione una opción: ")
 
@@ -297,6 +311,8 @@ def menu_admin():
             confirmacion = input("¿Desea cerrar sesión? (a) Sí / (b) No: ")
             if confirmacion.lower() == "a":
                 return
+        elif opcion =="5":
+            list_topo = get_topologies(userid_global)
 
 # Programa principal
 def main():

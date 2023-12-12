@@ -28,7 +28,28 @@ COMPUTE_API_VERSION = os.getenv("COMPUTE_API_VERSION") # ------------------ DONE
 TARGET_PORT = os.getenv("TARGET_PORT") # ------------------ DONE
 TARGET_HOST = os.getenv("TARGET_HOST") # ------------------ DONE
 
+
+def get_topologies(user_id):
+    admin_token = get_token_for_admin()
+    # print(admin_token)
+    # print(user_id)
+    r = list_projects(KEYSTONE_ENDPOINT, admin_token, user_id)
+    # print("valor de r")
+    # print(r)
+    if r.status_code == 200:
+        topologies = []
+        topology_list = r.json()['projects']
+        print(topology_list)
+        for t in topology_list:
+            # topology_object = Topology(t['id'], t['name'], t['description'])
+            topologies.append((t['id'], t['name'], t['description']))
+        # print(topologies)
+        return topologies
+    else:
+        return None
+
 def autenticar_usuario(username, password):
+
     r = password_authentication_with_unscoped_authorization(KEYSTONE_ENDPOINT, DOMAIN_ID, username, password)
     if r is not None:
         if r.status_code == 201:
